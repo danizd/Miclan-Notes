@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Editor } from '@toast-ui/react-editor';
+import React, { useState, useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import ConfirmDialog from './ConfirmDialog';
 
 export default function NoteEditor({
@@ -16,15 +17,21 @@ export default function NoteEditor({
   const [hasChanges, setHasChanges] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
   const [showConfirmCancel, setShowConfirmCancel] = useState(false);
-  const editorRef = useRef(null);
-  const initialContentRef = useRef(note?.content || '');
+  const [view, setView] = useState('edit');
+  const textareaRef = useRef(null);
 
   useEffect(() => {
-    initialContentRef.current = note?.content || '';
-    setTitle(note?.title || '');
-    setContent(note?.content || '');
-    setOriginalContent(note?.content || '');
-    setHasChanges(false);
+    if (note) {
+      setTitle(note.title || '');
+      setContent(note.content || '');
+      setOriginalContent(note.content || '');
+      setHasChanges(false);
+    } else {
+      setTitle('');
+      setContent('');
+      setOriginalContent('');
+      setHasChanges(false);
+    }
   }, [note?.filename, isNew]);
 
   const handleTitleChange = (e) => {
@@ -32,22 +39,14 @@ export default function NoteEditor({
     setHasChanges(true);
   };
 
-  const handleContentChange = () => {
-    if (!editorRef.current) return;
-    const editorInstance = editorRef.current.getInstance();
-    const newContent = editorInstance?.getMarkdown() || '';
-    if (newContent !== originalContent) {
-      setContent(newContent);
-      setHasChanges(true);
-    }
+  const handleContentChange = (e) => {
+    setContent(e.target.value);
+    setHasChanges(true);
   };
 
   const handleSave = async () => {
-    const editorInstance = editorRef.current?.getInstance();
-    const currentContent = editorInstance?.getMarkdown() || content;
-    
-    await onSave(title, currentContent);
-    setOriginalContent(currentContent);
+    await onSave(title, content);
+    setOriginalContent(content);
     setHasChanges(false);
     setShowSaved(true);
     setTimeout(() => setShowSaved(false), 2000);
@@ -66,15 +65,6 @@ export default function NoteEditor({
     onCancel();
   };
 
-  const handleEditorMount = () => {
-    if (editorRef.current && note?.content) {
-      const editorInstance = editorRef.current.getInstance();
-      editorInstance.setMarkdown(note.content);
-    }
-  };
-
-  const editorKey = useMemo(() => `${note?.filename || 'new'}-${isNew}`, [note?.filename, isNew]);
-
   return (
     <div className="editor-container">
       <div className="editor-header">
@@ -86,6 +76,20 @@ export default function NoteEditor({
           onChange={handleTitleChange}
           disabled={!isNew}
         />
+        <div className="editor-tabs">
+          <button 
+            className={`editor-tab ${view === 'edit' ? 'active' : ''}`}
+            onClick={() => setView('edit')}
+          >
+            Editar
+          </button>
+          <button 
+            className={`editor-tab ${view === 'preview' ? 'active' : ''}`}
+            onClick={() => setView('preview')}
+          >
+            Preview
+          </button>
+        </div>
         <div className="editor-actions">
           <button 
             className="editor-btn secondary"
@@ -124,24 +128,23 @@ export default function NoteEditor({
         </div>
       </div>
 
-      <div className="editor-wrapper">
-        <Editor
-          key={editorKey}
-          ref={editorRef}
-          initialValue={note?.content || ''}
-          previewStyle="vertical"
-          height="100%"
-          initialEditType="markdown"
-          useCommandShortcut={true}
-          onChange={handleContentChange}
-          onMount={handleEditorMount}
-          hooks={{
-            addImageBlobHook: (blob, callback) => {
-              callback(URL.createObjectURL(blob), 'image');
-              return false;
-            }
-          }}
-        />
+      <div className="editor-content">
+        {view === 'edit' ? (
+          <textarea
+            ref={textareaRef}
+            className="editor-textarea"
+            value={content}
+            onChange={handleContentChange}
+            placeholder="Escribe tu nota en Markdown..."
+            spellCheck="false"
+          />
+        ) : (
+          <div className="editor-preview">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {content || '*Sin contenido*'}
+            </ReactMarkdown>
+          </div>
+        )}
       </div>
 
       <ConfirmDialog
