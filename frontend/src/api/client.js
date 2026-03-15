@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.DEV ? '' : import.meta.env.VITE_API_URL;
+const API_URL = '';
 
 async function handleResponse(response) {
   if (!response.ok) {
