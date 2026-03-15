@@ -74,9 +74,14 @@ export default function App() {
     await loadCategories();
   };
 
-  const handleSelectNote = (note) => {
-    setSelectedNote(note);
-    setIsNewNote(false);
+  const handleSelectNote = async (note) => {
+    try {
+      const fullNote = await api.notes.get(selectedCategory, note.filename);
+      setSelectedNote(fullNote);
+      setIsNewNote(false);
+    } catch (err) {
+      console.error('Error loading note:', err);
+    }
   };
 
   const handleOpenNote = async (category, filename) => {
