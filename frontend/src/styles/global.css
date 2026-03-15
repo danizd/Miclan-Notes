@@ -579,6 +579,102 @@ body {
   background: var(--bg-hover) !important;
 }
 
+.toastui-editor .toastui-editor-md-preview {
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  padding: 1.5rem !important;
+}
+
+.toastui-editor .toastui-editor-md-preview h1,
+.toastui-editor .toastui-editor-md-preview h2,
+.toastui-editor .toastui-editor-md-preview h3,
+.toastui-editor .toastui-editor-md-preview h4,
+.toastui-editor .toastui-editor-md-preview h5,
+.toastui-editor .toastui-editor-md-preview h6 {
+  color: var(--text-primary) !important;
+  margin-top: 1.5em !important;
+  margin-bottom: 0.5em !important;
+}
+
+.toastui-editor .toastui-editor-md-preview h1:first-child {
+  margin-top: 0 !important;
+}
+
+.toastui-editor .toastui-editor-md-preview p {
+  margin-bottom: 1em !important;
+  line-height: 1.7 !important;
+}
+
+.toastui-editor .toastui-editor-md-preview ul,
+.toastui-editor .toastui-editor-md-preview ol {
+  padding-left: 1.5em !important;
+  margin-bottom: 1em !important;
+}
+
+.toastui-editor .toastui-editor-md-preview li {
+  margin-bottom: 0.25em !important;
+}
+
+.toastui-editor .toastui-editor-md-preview code {
+  background: var(--bg-tertiary) !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 4px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.9em !important;
+}
+
+.toastui-editor .toastui-editor-md-preview pre {
+  background: var(--bg-tertiary) !important;
+  padding: 1em !important;
+  border-radius: 8px !important;
+  overflow-x: auto !important;
+  margin-bottom: 1em !important;
+}
+
+.toastui-editor .toastui-editor-md-preview pre code {
+  background: none !important;
+  padding: 0 !important;
+}
+
+.toastui-editor .toastui-editor-md-preview blockquote {
+  border-left: 4px solid var(--accent) !important;
+  padding-left: 1em !important;
+  margin-left: 0 !important;
+  color: var(--text-secondary) !important;
+  font-style: italic !important;
+}
+
+.toastui-editor .toastui-editor-md-preview a {
+  color: var(--accent) !important;
+  text-decoration: none !important;
+}
+
+.toastui-editor .toastui-editor-md-preview a:hover {
+  text-decoration: underline !important;
+}
+
+.toastui-editor .toastui-editor-md-preview hr {
+  border: none !important;
+  border-top: 1px solid var(--border) !important;
+  margin: 1.5em 0 !important;
+}
+
+.toastui-editor .toastui-editor-md-preview table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin-bottom: 1em !important;
+}
+
+.toastui-editor .toastui-editor-md-preview th,
+.toastui-editor .toastui-editor-md-preview td {
+  border: 1px solid var(--border) !important;
+  padding: 0.5em !important;
+}
+
+.toastui-editor .toastui-editor-md-preview th {
+  background: var(--bg-tertiary) !important;
+}
+
 .search-container {
   position: relative;
   width: 320px;

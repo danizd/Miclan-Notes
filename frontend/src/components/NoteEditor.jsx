@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Editor } from '@toast-ui/react-editor';
 import ConfirmDialog from './ConfirmDialog';
 
@@ -16,7 +16,24 @@ export default function NoteEditor({
   const [hasChanges, setHasChanges] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
   const [showConfirmCancel, setShowConfirmCancel] = useState(false);
+  const [editorReady, setEditorReady] = useState(false);
   const editorRef = useRef(null);
+  const noteRef = useRef(note);
+
+  useEffect(() => {
+    noteRef.current = note;
+  }, [note]);
+
+  const initializeEditor = useCallback(() => {
+    if (editorRef.current && editorReady) {
+      const editorInstance = editorRef.current.getInstance();
+      if (noteRef.current) {
+        editorInstance.setMarkdown(noteRef.current.content || '');
+      } else {
+        editorInstance.setMarkdown('');
+      }
+    }
+  }, [editorReady]);
 
   useEffect(() => {
     if (note) {
@@ -24,23 +41,19 @@ export default function NoteEditor({
       setContent(note.content || '');
       setOriginalContent(note.content || '');
       setHasChanges(false);
-      
-      if (editorRef.current) {
-        const editorInstance = editorRef.current.getInstance();
-        editorInstance.setMarkdown(note.content || '');
-      }
     } else {
       setTitle('');
       setContent('');
       setOriginalContent('');
       setHasChanges(false);
-      
-      if (editorRef.current) {
-        const editorInstance = editorRef.current.getInstance();
-        editorInstance.setMarkdown('');
-      }
     }
-  }, [note, isNew]);
+    
+    const timer = setTimeout(() => {
+      initializeEditor();
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, [note?.filename, isNew, initializeEditor]);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -78,6 +91,14 @@ export default function NoteEditor({
   const handleConfirmCancel = () => {
     setShowConfirmCancel(false);
     onCancel();
+  };
+
+  const handleEditorMount = () => {
+    setEditorReady(true);
+    const editorInstance = editorRef.current?.getInstance();
+    if (note?.content) {
+      editorInstance?.setMarkdown(note.content);
+    }
   };
 
   return (
@@ -131,14 +152,14 @@ export default function NoteEditor({
 
       <div className="editor-wrapper">
         <Editor
-          key={note?.filename || 'new-note'}
           ref={editorRef}
-          initialValue={content || ''}
+          initialValue={note?.content || ''}
           previewStyle="vertical"
           height="100%"
           initialEditType="markdown"
           useCommandShortcut={true}
           onChange={handleContentChange}
+          onMount={handleEditorMount}
           hooks={{
             addImageBlobHook: (blob, callback) => {
               callback(URL.createObjectURL(blob), 'image');
