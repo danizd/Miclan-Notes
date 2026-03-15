@@ -1,6 +1,15 @@
 # Miclan Notes
 
-Aplicación web para gestión personal de notas en formato Markdown.
+Aplicación web para gestión personal de notas en formato Markdown, diseñada para funcionar junto con [OpenClaw](https://github.com/danizd/openclaw).
+
+## Acerca de OpenClaw + Miclan Notes
+
+Este proyecto forma parte de un flujo de trabajo completo para la gestión de notas:
+
+1. **OpenClaw** - Cliente de escritorio para tomar notas rápidas en Markdown
+2. **Miclan Notes** - Aplicación web para visualizar y gestionar las notas
+
+Las notas tomadas con OpenClaw se almacenan en formato Markdown y pueden ser accedidas y gestionadas desde Miclan Notes a través de la red local.
 
 ## Características
 
@@ -9,6 +18,7 @@ Aplicación web para gestión personal de notas en formato Markdown.
 - **Búsqueda global** - Busca en todas las notas y categorías
 - **Editor dual** - Modo Editar y Preview con Markdown
 - **Tema claro** - Diseño moderno y limpio
+- **Acceso via red local** - Accede a tus notas desde cualquier dispositivo
 
 ## Stack
 
@@ -50,11 +60,21 @@ PORT=3000
 start.bat
 ```
 
-### Producción
+### Producción (Docker)
 
 ```env
 NOTES_DIR=/mnt/notas
 PORT=3000
+```
+
+### Producción con acceso via red
+
+Para acceder desde otros dispositivos en la red local:
+
+```env
+NOTES_DIR=/mnt/notas
+PORT=3000
+VITE_API_URL=http://TU_IP_LOCAL:3000
 ```
 
 ## API
