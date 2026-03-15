@@ -10,12 +10,26 @@ Miclan Notes es una aplicación web para gestión de notas en Markdown. El proye
 - react-markdown + remark-gfm para preview
 - Express 4.x
 
+## Características del Editor
+
+- Textarea para edición en Markdown
+- Preview renderizado con react-markdown
+- Pestañas "Editar" y "Preview" (Preview por defecto al abrir notas)
+- Barra de herramientas con botones de formato:
+  - Negrita, Cursiva, Tachado
+  - Títulos H1, H2, H3
+  - Listas (viñetas y numeradas)
+  - Citas
+  - Código (inline y bloque)
+  - Enlaces
+  - Divisor
+
 ## Estructura Relevante
 
 ```
 frontend/src/
 ├── components/
-│   ├── NoteEditor.jsx    # Editor con textarea + preview
+│   ├── NoteEditor.jsx    # Editor con textarea + preview + toolbar
 │   ├── NoteList.jsx
 │   ├── Sidebar.jsx
 │   └── SearchBar.jsx
