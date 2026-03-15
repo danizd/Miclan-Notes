@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Editor } from '@toast-ui/react-editor';
 import ConfirmDialog from './ConfirmDialog';
 
@@ -16,44 +16,16 @@ export default function NoteEditor({
   const [hasChanges, setHasChanges] = useState(false);
   const [showSaved, setShowSaved] = useState(false);
   const [showConfirmCancel, setShowConfirmCancel] = useState(false);
-  const [editorReady, setEditorReady] = useState(false);
   const editorRef = useRef(null);
-  const noteRef = useRef(note);
+  const initialContentRef = useRef(note?.content || '');
 
   useEffect(() => {
-    noteRef.current = note;
-  }, [note]);
-
-  const initializeEditor = useCallback(() => {
-    if (editorRef.current && editorReady) {
-      const editorInstance = editorRef.current.getInstance();
-      if (noteRef.current) {
-        editorInstance.setMarkdown(noteRef.current.content || '');
-      } else {
-        editorInstance.setMarkdown('');
-      }
-    }
-  }, [editorReady]);
-
-  useEffect(() => {
-    if (note) {
-      setTitle(note.title || '');
-      setContent(note.content || '');
-      setOriginalContent(note.content || '');
-      setHasChanges(false);
-    } else {
-      setTitle('');
-      setContent('');
-      setOriginalContent('');
-      setHasChanges(false);
-    }
-    
-    const timer = setTimeout(() => {
-      initializeEditor();
-    }, 100);
-    
-    return () => clearTimeout(timer);
-  }, [note?.filename, isNew, initializeEditor]);
+    initialContentRef.current = note?.content || '';
+    setTitle(note?.title || '');
+    setContent(note?.content || '');
+    setOriginalContent(note?.content || '');
+    setHasChanges(false);
+  }, [note?.filename, isNew]);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -61,7 +33,8 @@ export default function NoteEditor({
   };
 
   const handleContentChange = () => {
-    const editorInstance = editorRef.current?.getInstance();
+    if (!editorRef.current) return;
+    const editorInstance = editorRef.current.getInstance();
     const newContent = editorInstance?.getMarkdown() || '';
     if (newContent !== originalContent) {
       setContent(newContent);
@@ -94,12 +67,13 @@ export default function NoteEditor({
   };
 
   const handleEditorMount = () => {
-    setEditorReady(true);
-    const editorInstance = editorRef.current?.getInstance();
-    if (note?.content) {
-      editorInstance?.setMarkdown(note.content);
+    if (editorRef.current && note?.content) {
+      const editorInstance = editorRef.current.getInstance();
+      editorInstance.setMarkdown(note.content);
     }
   };
+
+  const editorKey = useMemo(() => `${note?.filename || 'new'}-${isNew}`, [note?.filename, isNew]);
 
   return (
     <div className="editor-container">
@@ -114,7 +88,7 @@ export default function NoteEditor({
         />
         <div className="editor-actions">
           <button 
-            className={`editor-btn secondary`}
+            className="editor-btn secondary"
             onClick={handleCancelClick}
           >
             Cancelar
@@ -152,6 +126,7 @@ export default function NoteEditor({
 
       <div className="editor-wrapper">
         <Editor
+          key={editorKey}
           ref={editorRef}
           initialValue={note?.content || ''}
           previewStyle="vertical"
