@@ -2,41 +2,20 @@
 
 ## Contexto del Proyecto
 
-Miclan Notes es una aplicación web para gestión de notas en Markdown. El proyecto está incompleto debido a un problema con el editor de Markdown.
+Miclan Notes es una aplicación web para gestión de notas en Markdown. El proyecto está funcionando correctamente con un editor de texto plano + preview de Markdown.
 
-## Problema Actual
+## Stack Actual (Funcionando)
 
-**El editor de notas no funciona**: Toast UI Editor genera el error "There is no event type mount" al intentar cargar/crear una nota.
-
-## Stack Actual (no funciona bien)
-
-- React 17.0.2 + Vite 5.x
-- @toast-ui/react-editor 3.2.0
-- @toast-ui/editor 3.2.0
-
-## Tareas Pendientes
-
-### 1. CRÍTICO: Arreglar el editor de notas
-El editor debe permitir:
-- Ver el contenido Markdown de las notas existentes
-- Crear nuevas notas
-- Editar y guardar notas
-
-Opciones recomendadas:
-- **Opción A**: Cambiar a otra librería (CodeMirror 6, Monaco Editor, react-markdown)
-- **Opción B**: Usar un textarea simple con preview de Markdown
-- **Opción C**: Encontrar la versión correcta de Toast UI que funcione
-
-### 2. Mejorar la aplicación
-- Guardar notas correctamente en el filesystem
-- Mejoras de UX según sea necesario
+- React 18.0.2 + Vite 5.x
+- react-markdown + remark-gfm para preview
+- Express 4.x
 
 ## Estructura Relevante
 
 ```
 frontend/src/
 ├── components/
-│   ├── NoteEditor.jsx    # Editor - PROBLEMA AQUÍ
+│   ├── NoteEditor.jsx    # Editor con textarea + preview
 │   ├── NoteList.jsx
 │   ├── Sidebar.jsx
 │   └── SearchBar.jsx
@@ -48,7 +27,7 @@ frontend/src/
 
 ```bash
 # Desarrollo
-cd frontend && npm install --legacy-peer-deps
+cd frontend && npm install
 npm run dev
 
 # Producción
