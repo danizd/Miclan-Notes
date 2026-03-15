@@ -24,11 +24,21 @@ export default function NoteEditor({
       setContent(note.content || '');
       setOriginalContent(note.content || '');
       setHasChanges(false);
+      
+      if (editorRef.current) {
+        const editorInstance = editorRef.current.getInstance();
+        editorInstance.setMarkdown(note.content || '');
+      }
     } else {
       setTitle('');
       setContent('');
       setOriginalContent('');
       setHasChanges(false);
+      
+      if (editorRef.current) {
+        const editorInstance = editorRef.current.getInstance();
+        editorInstance.setMarkdown('');
+      }
     }
   }, [note, isNew]);
 
@@ -121,6 +131,7 @@ export default function NoteEditor({
 
       <div className="editor-wrapper">
         <Editor
+          key={note?.filename || 'new-note'}
           ref={editorRef}
           initialValue={content || ''}
           previewStyle="vertical"
