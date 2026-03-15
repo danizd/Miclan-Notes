@@ -10,9 +10,9 @@ echo.
 
 cd /d "%~dp0"
 
-if not exist .env (
-    echo ERROR: No existe el archivo .env
-    echo Copia .env.example a .env y configura tus rutas
+if not exist backend\.env (
+    echo ERROR: No existe el archivo backend\.env
+    echo Copia .env.example a backend\.env y configura tus rutas
     pause
     exit /b 1
 )
